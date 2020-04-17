@@ -6,7 +6,7 @@ ns = [100;111;109;97;105;110;49];
 [dl, bt] = decsg(gm, sf, ns);
 [p, e, t] = initMesh(dl);
 
-numOfPartials = 2;
+numOfPartials = 4;
 [p, e, t] = refine(numOfPartials, dl, p, e, t);
 
 f = @(x, y) 2 * (x*(1 - x) + y*(1 - y));
