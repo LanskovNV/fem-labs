@@ -73,6 +73,91 @@ J = ||u_h - u||_{L^2}^2
 
 \end{enumerate} 
 
+\section{Решение}
+\subsection{Триангуляция области}
+Пока что для простоты рассматривается прямоугольная область, триангуляция выполняется следующим образом:
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{Figure_1.png}}
+\end{figure} 
+
+
+\subsection{Построение интерполянта}
+Интерполянт задаётся в узлах сетки точными занчениями интерполируемой функции. На рёбрах конечного элемента он задаётся уравнением прямой в пространстве $R_3$, проходящей через точки ребра, на грани - уравнением плоскости, проходящей через вершины конечного элемента(в данной работе это впринципе не нужно, достаточно рассматривать рёбра).
+
+\subsection{Вычисление нормы разности точного решения и интерполянта}
+
+Норму считаем по следующей формуле
+($\Omega_i$ - конечный элемент с индексом $i$, $N$ - число конечных элементов)
+$$
+||f||_{L_2(\Omega)} = \int\limits_{\Omega}|f|^2d\Omega = \sum_{i=1}^{N}\int\limits_{\Omega_i}|f|^2d\Omega
+$$
+
+А интеграл на конечном элементе считаем как:
+
+$$
+\int\limits_{\Omega_i}|f|^2d\Omega = \dfrac{\Delta_i}{3}(\psi_{12} + \psi_{13} + \psi_{23})
+$$
+Где $\psi_{jk}$ - значение функции $f$ в центральной точке ребра $jk$ конечного элемента $i$
+
+При этом, в данном случае функция $f = u - u_I$. Пример того, как в точности вычисляется норма, есть в приведённом ниже коде программы
+
+\subsection{Вычисление нормы разности градиентов точного решения и интерполянта}
+
+Тут действуем в точности также, как и в пункте выше. В данном случае, функция $f = grad(u) - grad(u_I)$. $grad(u)$ задаём `вручную` по определению градиента. $grad(u_I)$ считаем следующим образом:
+
+$$
+\dfrac{x-x_b}{x_a-x_b}=\dfrac{y-y_b}{y_a-y_b}=\dfrac{z-z_b}{z_a-z_b}
+$$
+
+Из этой формулы для ребра, заданного точками $a$ и $b$, спроецировав равенства на плоскости `Ozy`, 'Ozx' получим константное выражение вида:
+
+$$
+grad(u_I) = \dfrac{z_a-z_b}{y_a-y_b} + \dfrac{z_a-z_b}{x_a-x_b}
+$$
+
+Если знаменатель в каком-то слагаемом обращается в нуль - заменяем всё слагаемое на нуль.
+
+(Мне очень сильно кажется, что я всё делаю совершенно не так, но на сегодня ничего лучше я не придумал)
+
+\subsection{Зависимость ошибки от числа шагов}
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{a.png}}
+\end{figure} 
+
+\section{Код}
+
+Прикладываю скриншоты программы. Весь код в более удобном виде можно посмотреть тут
+\url{https://github.com/LanskovNV/fem-labs/tree/master/lab_3}
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{0.png}}
+\end{figure} 
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{1.png}}
+\end{figure} 
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{2.png}}
+\end{figure} 
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{3.png}}
+\end{figure} 
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{4.png}}
+\end{figure} 
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.8]{5.png}}
+\end{figure} 
+
+
+\end{document}
+
 
 
 
