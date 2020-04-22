@@ -5,22 +5,24 @@ from interpolation import Interpolation
 
 
 if __name__ == "__main__":
-    num_of_nodes = 4
-    x0, x1 = 0, 1
-    y0, y1 = 0, 1
-    shape = np.array([[x0, y0], [x0, y1], [x1, y1], [x0, y1]])
+    num_of_nodes = 2
+    xa, xb = 0, 1
+    ya, yb = 0, 1
+    shape = np.array([[xa, ya], [xa, yb], [xb, yb], [xa, yb]])
 
-    Interpolation(num_of_nodes, shape).omega.draw_net()
-    # inter = 0
-    # print("function:")
-    # for i in range(8):
-    #     inter = Interpolation(num_of_nodes, shape)
-    #     print("n = ", num_of_nodes, ", error = ", inter.error(is_grad=False))
-    #     num_of_nodes *= 2
-    #
+    # Interpolation(num_of_nodes, shape).omega.draw_net()
+
+    inter = 0
+    print("function:")
+    for i in range(9):
+        inter = Interpolation(num_of_nodes, shape)
+        print("n = ", num_of_nodes, ", error = ", inter.error(is_grad=False))
+        num_of_nodes *= 2
+        # inter.draw()
+
     # num_of_nodes = 2
     # print("gradient:")
-    # for i in range(8):
+    # for i in range(6):
     #     inter = Interpolation(num_of_nodes, shape)
     #     print("n = ", num_of_nodes, ", error = ", inter.error(is_grad=True))
     #     num_of_nodes *= 2

@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from math import sqrt
 
 from rectangle import Rectangle
 
@@ -42,46 +43,35 @@ class Interpolation:
             s = abs(s) / 2
             return s
 
-        def int_middle(trc, a, b,  x, y):
-            ff = self.function
-            x0, x1 = trc[a][0], trc[b][0]
-            y0, y1 = trc[a][1], trc[b][1]
-            z0, z1 = ff(x0, y0), ff(x1, y1)
-            dx, dy = x1 - x0, y1 - y0
+        def middle_val(trc, a, b, x, y):
+            xa, xb = trc[a][0], trc[b][0]
+            ya, yb = trc[a][1], trc[b][1]
+            za, zb = self.function(xa, ya), self.function(xb, yb)
 
-            if is_grad:
-                res = 0
-                if x1 - x0 != 0:
-                    res += (z1-z0) / (x1-x0)
-                if y1 - y0 != 0:
-                    res += (z1-z0) / (y1-y0)
-                return res
+            if xb - xa == 0:
+                return za + (zb - za) * (y - ya) / (yb - ya)
             else:
-                if dx == 0:
-                    return z0 + (z1 - z0) * (y - y0) / dy
-                else:
-                    return z0 + (z1 - z0) * (x - x0) / dx
+                return za + (zb - za) * (x - xa) / (xb - xa)
 
         def middle(trc, a, b):
+            x = (trc[b][0] + trc[a][0]) / 2
+            y = (trc[b][1] + trc[a][1]) / 2
             if is_grad:
-                f = self.grad
+                pass
             else:
-                f = self.function
-            x = (trc[a][0] - trc[b][0]) / 2
-            y = (trc[a][1] - trc[b][1]) / 2
-
-            return abs(int_middle(trc, a, b, x, y) - f(x, y))
+                mid_val = middle_val(trc, a, b, x, y)
+                return (abs(mid_val - self.function(x, y))) ** 2
 
         def int_triang(tr):
             trc = get_coords(tr)
             f01 = middle(trc, 0, 1)
             f12 = middle(trc, 1, 2)
-            f02 = middle(trc, 0, 2)
-            return area(trc) / 3 * (f01 * f12 * f02)
+            f20 = middle(trc, 2, 0)
+            return area(trc) / 3 * (f01 + f12 + f20)
 
         ans = 0
         for _ in self.omega.triangles.triangles:
-            ans += (int_triang(_))**2
+            ans += int_triang(_)
 
-        return ans
+        return sqrt(ans)
 
