@@ -78,7 +78,7 @@ J = ||u_h - u||_{L^2}^2
 Пока что для простоты рассматривается прямоугольная область, триангуляция выполняется следующим образом:
 
 \begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{Figure_1.png}}
+\centerline{\includegraphics[scale = 0.6]{Figure_1.png}}
 \end{figure} 
 
 
@@ -90,7 +90,7 @@ J = ||u_h - u||_{L^2}^2
 Норму считаем по следующей формуле
 ($\Omega_i$ - конечный элемент с индексом $i$, $N$ - число конечных элементов)
 $$
-||f||_{L_2(\Omega)} = \int\limits_{\Omega}|f|^2d\Omega = \sum_{i=1}^{N}\int\limits_{\Omega_i}|f|^2d\Omega
+||f||_{L_2(\Omega)} = \left(\int\limits_{\Omega}|f|^2d\Omega\right)^{0.5} = \left(\sum_{i=1}^{N}\int\limits_{\Omega_i}|f|^2d\Omega\right)^{0.5}
 $$
 
 А интеграл на конечном элементе считаем как:
@@ -98,62 +98,40 @@ $$
 $$
 \int\limits_{\Omega_i}|f|^2d\Omega = \dfrac{\Delta_i}{3}(\psi_{12} + \psi_{13} + \psi_{23})
 $$
-Где $\psi_{jk}$ - значение функции $f$ в центральной точке ребра $jk$ конечного элемента $i$
+Где $\psi_{jk}$ - значение функции $|f|^2$ в центральной точке ребра $jk$ конечного элемента $i$, \\
+а $\Delta_i$ - площадь конечного элемента
 
 При этом, в данном случае функция $f = u - u_I$. Пример того, как в точности вычисляется норма, есть в приведённом ниже коде программы
 
 \subsection{Вычисление нормы разности градиентов точного решения и интерполянта}
 
-Тут действуем в точности также, как и в пункте выше. В данном случае, функция $f = grad(u) - grad(u_I)$. $grad(u)$ задаём `вручную` по определению градиента. $grad(u_I)$ считаем следующим образом:
+Тут действуем в точности также, как и в пункте выше. В данном случае, функция $f = grad(u) - grad(u_I)$. $grad(u)$ задаём `вручную` по определению градиента. $grad(u_I)$ находим как сумму значений $a_1 + a_2$, где $a_1, a_2$ находим из решения системы:
 
-$$
-\dfrac{x-x_b}{x_a-x_b}=\dfrac{y-y_b}{y_a-y_b}=\dfrac{z-z_b}{z_a-z_b}
-$$
-
-Из этой формулы для ребра, заданного точками $a$ и $b$, спроецировав равенства на плоскости `Ozy`, 'Ozx' получим константное выражение вида:
-
-$$
-grad(u_I) = \dfrac{z_a-z_b}{y_a-y_b} + \dfrac{z_a-z_b}{x_a-x_b}
-$$
-
-Если знаменатель в каком-то слагаемом обращается в нуль - заменяем всё слагаемое на нуль.
-
-(Мне очень сильно кажется, что я всё делаю совершенно не так, но на сегодня ничего лучше я не придумал)
+\begin{equation}
+ \begin{cases}
+  a_1x_1 + a_2y_1 + a_3 = u(x_1, y_1) \\
+  a_1x_2 + a_2y_2 + a_3 = u(x_2, y_2) \\
+  a_1x_3 + a_2y_3 + a_3 = u(x_3, y_3)
+ \end{cases}
+ \nonumber
+\end{equation}
+Где $z = a_1x + a_2y + a_3$ - уравнение плоскости, в которой лежит конечный элемент, \\
+а $(x_i, y_i, u(x_i, y_i))$ - координаты вершин конечного элемента (известны из постановки задачи и триангуляции области)
 
 \subsection{Зависимость ошибки от числа шагов}
 
 \begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{a.png}}
+\centerline{\includegraphics[scale = 0.6]{0.png}}
+\end{figure} 
+
+\begin{figure}[H] \label{fig1}
+\centerline{\includegraphics[scale = 0.6]{Figure_2.png}}
 \end{figure} 
 
 \section{Код}
 
-Прикладываю скриншоты программы. Весь код в более удобном виде можно посмотреть тут
+Код программы можно посмотреть тут: \\
 \url{https://github.com/LanskovNV/fem-labs/tree/master/lab_3}
-
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{0.png}}
-\end{figure} 
-
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{1.png}}
-\end{figure} 
-
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{2.png}}
-\end{figure} 
-
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{3.png}}
-\end{figure} 
-
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{4.png}}
-\end{figure} 
-
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.8]{5.png}}
-\end{figure} 
 
 
 \end{document}

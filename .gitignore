@@ -1,5 +1,4 @@
 cmake-build*
-*.png
 __pycache__
 .directory
 .idea

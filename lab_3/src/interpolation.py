@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import sqrt
 
-from rectangle import Rectangle
+from src.rectangle import Rectangle
 
 
 class Interpolation:

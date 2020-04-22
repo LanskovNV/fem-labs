@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from interpolation import Interpolation
+from src.interpolation import Interpolation
 
 xa, xb = 0, 1
 ya, yb = 0, 1

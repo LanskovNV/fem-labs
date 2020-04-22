@@ -1,6 +1,6 @@
 import numpy as np
 
-from region import Region
+from src.region import Region
 
 
 class Rectangle(Region):
