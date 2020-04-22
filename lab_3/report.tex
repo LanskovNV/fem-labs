@@ -30,6 +30,8 @@
 
 \usepackage{color,colortbl}
 
+\usepackage{pdfpages}
+
 % \usepackage{verbatim}
 %%%
 % document settings
@@ -118,21 +120,29 @@ $$
 Где $z = a_1x + a_2y + a_3$ - уравнение плоскости, в которой лежит конечный элемент, \\
 а $(x_i, y_i, u(x_i, y_i))$ - координаты вершин конечного элемента (известны из постановки задачи и триангуляции области)
 
-\subsection{Зависимость ошибки от числа шагов}
+\subsection{Зависимость ошибки от числа узлов}
 
 \begin{figure}[H] \label{fig1}
 \centerline{\includegraphics[scale = 0.6]{0.png}}
 \end{figure} 
 
 \begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.6]{Figure_2.png}}
+\centerline{\includegraphics[scale = 0.9]{Figure_3.png}}
+\caption{Графики зависимости ошибки от числа узлов (на границе области) 
+для функции $f(x, y) = x(1-x)y(1-y)$ в логарифмических осях.}
 \end{figure} 
 
 \section{Код}
 
-Код программы можно посмотреть тут: \\
-\url{https://github.com/LanskovNV/fem-labs/tree/master/lab_3}
+Все материалы, использованные при подготовке работы, доступны тут: \\
+\url{https://github.com/LanskovNV/fem-labs/tree/master/lab_3} \\
+Также все исходные коды доступны в секции `Приложение`.
 
+\section{Приложение}
+\includepdf{pdfcode/0.pdf}
+\includepdf{pdfcode/1.pdf}
+\includepdf{pdfcode/2.pdf}
+\includepdf[pages={1,2}]{pdfcode/3.pdf}
 
 \end{document}
 

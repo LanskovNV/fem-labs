@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from math import log2
 
 from src.interpolation import Interpolation
 
@@ -25,28 +26,41 @@ def draw_errors():
     err = [Interpolation(i, shape).error() for i in n]
     err_grad = [Interpolation(i, shape).error(True) for i in n]
 
+    f = np.vectorize(log2)
+    def f1(x): return -2*x - 3
+    def f2(x): return - x - 2
+    f1 = np.vectorize(f1)
+    f2 = np.vectorize(f2)
+    z = range(1, 9)
+
     fig, (ax1, ax2) = plt.subplots(1, 2)
     x, y = n, err
-    ax1.plot(x, y)
+    ax1.plot(f(x), f(y), label='func_err')
+    ax1.plot(z, f1(z), 'ro', label='y = -2x - 3')
     x, y = n, err_grad
-    ax2.plot(x, y, 'r')
+    ax2.plot(f(x), f(y), label='grad_err')
+    ax2.plot(z, f2(z), 'ro', label='y = -x - 2')
 
     ax1.set_title("func_error(num_of_nodes)")
+    ax1.set_xlabel("log(nodes)")
+    ax1.set_ylabel("log(error)")
     ax1.grid()
-    ax1.set_xlabel("nodes")
-    ax1.set_ylabel("error")
+    ax1.legend()
 
     ax2.set_title("grad_error(num_of_nodes)")
+    ax2.set_xlabel("log(nodes)")
+    ax2.set_ylabel("log(gradient error)")
     ax2.grid()
-    ax2.set_xlabel("nodes")
-    ax2.set_ylabel("gradient error")
+    ax2.legend()
 
-    plt.show()
+    plt.savefig("pic/Figure_3.png")
+    # plt.show()
+
 
 
 if __name__ == "__main__":
-    print_errors()
-    # draw_errors()
+    # print_errors()
+    draw_errors()
 
 
 
