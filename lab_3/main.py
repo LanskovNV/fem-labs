@@ -12,18 +12,16 @@ if __name__ == "__main__":
 
     # Interpolation(num_of_nodes, shape).omega.draw_net()
 
-    inter = 0
     print("function:")
     for i in range(9):
         inter = Interpolation(num_of_nodes, shape)
         print("n = ", num_of_nodes, ", error = ", inter.error(is_grad=False))
         num_of_nodes *= 2
-        # inter.draw()
 
-    # num_of_nodes = 2
-    # print("gradient:")
-    # for i in range(6):
-    #     inter = Interpolation(num_of_nodes, shape)
-    #     print("n = ", num_of_nodes, ", error = ", inter.error(is_grad=True))
-    #     num_of_nodes *= 2
+    num_of_nodes = 2
+    print("gradient:")
+    for i in range(9):
+        inter = Interpolation(num_of_nodes, shape)
+        print("n = ", num_of_nodes, ", error = ", inter.error(is_grad=True))
+        num_of_nodes *= 2
 

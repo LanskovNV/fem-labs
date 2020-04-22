@@ -53,11 +53,20 @@ class Interpolation:
             else:
                 return za + (zb - za) * (x - xa) / (xb - xa)
 
+        def middle_val_grad(trc):
+            m = np.column_stack((trc, np.ones(3)))
+            r = np.array([self.function(trc[0][0], trc[0][1]),
+                          self.function(trc[1][0], trc[1][1]),
+                          self.function(trc[2][0], trc[2][1])])
+            a = np.linalg.solve(m, r)
+            return a[0] + a[1]
+
         def middle(trc, a, b):
             x = (trc[b][0] + trc[a][0]) / 2
             y = (trc[b][1] + trc[a][1]) / 2
             if is_grad:
-                pass
+                mid_val = middle_val_grad(trc)
+                return (abs(mid_val - self.grad(x, y))) ** 2
             else:
                 mid_val = middle_val(trc, a, b, x, y)
                 return (abs(mid_val - self.function(x, y))) ** 2
