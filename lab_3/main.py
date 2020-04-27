@@ -53,14 +53,13 @@ def draw_errors():
     ax2.grid()
     ax2.legend()
 
-    plt.savefig("pic/Figure_3.png")
-    # plt.show()
-
+    # plt.savefig("pic/Figure_3.png")
+    plt.show()
 
 
 if __name__ == "__main__":
-    # print_errors()
-    draw_errors()
+    print_errors()
+    # draw_errors()
 
 
 

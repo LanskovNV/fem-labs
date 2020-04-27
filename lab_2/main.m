@@ -17,7 +17,7 @@ vh = fem_2D(p, t, e, f);
 fprintf('Норма погрешности в L^2: %d \n', errorFEM(vh, t, p, analytic));
 fprintf('Норма погрешности градиента L^2: %d \n', gradErrorFEM(vh, t, p, @grad));
 
-draw_analytic(analytic);
+% draw_analytic(analytic);
 draw_solution(t, p, vh);
 
 
@@ -32,6 +32,7 @@ function [p, e, t] = refine(num, dl, p, e, t)
         [p, e, t] = refinemesh(dl, p, e, t, 'regular');
     end
 end
+
 
 % Draw funcions
 function draw_solution(t, p, vh)
