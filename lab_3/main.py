@@ -3,18 +3,23 @@ import matplotlib.pyplot as plt
 from math import log2
 import csv
 from src.interpolation import Interpolation
+from src.minimization import Minimization
 from src.source import draw
+import matplotlib
 
-name = "./out.csv"
+name = "./out2.csv"
 xa, xb = 0, 1
 ya, yb = 0, 1
 shape = np.array([[xa, ya], [xa, yb], [xb, yb], [xb, ya]])
 
+matplotlib.use('TkAgg')
+
 
 def print_errors():
     dicts = []
-    for i in range(1, 9):
-        inter = Interpolation(2**i, shape)
+    for i in range(2, 5):  # 1, 9
+        print(i)
+        inter = Minimization(2**i, shape)  # Interpolation(2**i, shape)
         dicts.append({"n": 2**i,
                       "function error": inter.error(is_grad=False),
                       "gradient error": inter.error(is_grad=True)})
@@ -63,13 +68,12 @@ def draw_errors():
 
 
 def test():
-    n = 3
-    inter = Interpolation(n, shape)
+    n = 10
+    inter = Minimization(n, shape)
     draw(inter.omega, inter.function)
 
 
 if __name__ == "__main__":
-    # test()
     print_errors()
     # draw_errors()
 
