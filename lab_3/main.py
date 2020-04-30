@@ -2,8 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from math import log2
 import csv
-
 from src.interpolation import Interpolation
+from src.source import draw
 
 name = "./out.csv"
 xa, xb = 0, 1
@@ -62,7 +62,14 @@ def draw_errors():
     plt.show()
 
 
+def test():
+    n = 3
+    inter = Interpolation(n, shape)
+    draw(inter.omega, inter.function)
+
+
 if __name__ == "__main__":
+    # test()
     print_errors()
     # draw_errors()
 

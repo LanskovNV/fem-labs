@@ -1,28 +1,40 @@
 import numpy as np
-import matplotlib.pyplot as plt
-from math import sqrt
-
-from src.rectangle import Rectangle
+from src.base_fem import BaseFem
 
 
-class Minimization:
-    def __init__(self):
-        pass
+class Minimization(BaseFem):
+    def __init__(self, n, shape):
+        super().__init__(n, shape)
+        self.set_node_values()
 
-    def get_basis(self, ind):
-        pass
+    def set_node_values(self):
+        rank = len(self.omega.x_coords)
+        x = self.omega.x_coords
+        y = self.omega.y_coords
+        A = np.zeros((rank, rank))
+        R = np.zeros(rank)
 
-    def get_shape(self, trc):
-        pass
+        for i in range(rank):
+            elems_i = self.get_elems(i)
+            shapes_i = self.shapes(elems_i, i)
 
-    def integrate(self):
-        pass
+            # right part
+            value = 0
+            for si in shapes_i:
+                value += si(x(i), y(i)) * self.function(x(i), y(i))
+            for ei in elems_i:
+                R[i] += self.integrate(ei, value, i)
 
-    def calculate(self):
-        pass
+            # matrix row
+            for j in range(rank):
+                elems_j = self.get_elems(j)
+                shapes_j = self.shapes(elems_j, j)
+                value = 0
+                for si in shapes_i:
+                    for sj in shapes_j:
+                        value += si(x(i), y(i)) * sj(x(i), y(i))
 
-    def error(self):
-        pass
+                for ei in elems_i:
+                    A[i, j] += self.integrate(ei, value, i)
 
-    def error_grad(self):
-        pass
+        self.node_values = np.linalg.solve(A, R)
