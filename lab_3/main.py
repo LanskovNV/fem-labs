@@ -68,13 +68,21 @@ def draw_errors():
 
 
 def test():
-    n = 10
+    n = 4
     inter = Minimization(n, shape)
-    draw(inter.omega, inter.function)
+    print(inter.error(False))
+
+
+def test2():
+    n = 4
+    inter = Interpolation(n, shape)
+    print(inter.error(False))
 
 
 if __name__ == "__main__":
-    print_errors()
+    test()
+    test2()
+    # print_errors()
     # draw_errors()
 
 
