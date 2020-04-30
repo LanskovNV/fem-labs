@@ -1,24 +1,29 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from math import log2
+import csv
 
 from src.interpolation import Interpolation
 
+name = "./out.csv"
 xa, xb = 0, 1
 ya, yb = 0, 1
 shape = np.array([[xa, ya], [xa, yb], [xb, yb], [xb, ya]])
 
 
 def print_errors():
-    print("function:")
+    dicts = []
     for i in range(1, 9):
         inter = Interpolation(2**i, shape)
-        print("n = ", 2**i, ", error = ", inter.error(is_grad=False))
+        dicts.append({"n": 2**i,
+                      "function error": inter.error(is_grad=False),
+                      "gradient error": inter.error(is_grad=True)})
 
-    print("gradient:")
-    for i in range(1, 9):
-        inter = Interpolation(2**i, shape)
-        print("n = ", 2**i, ", error = ", inter.error(is_grad=True))
+    with open(name, mode="w") as csv_file:
+        fieldnames = ["n", "function error", "gradient error"]
+        writer = csv.DictWriter(csv_file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(dicts)
 
 
 def draw_errors():

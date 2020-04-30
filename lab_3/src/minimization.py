@@ -12,7 +12,7 @@ class Minimization:
     def get_basis(self, ind):
         pass
 
-    def get_shape(self, ind):
+    def get_shape(self, trc):
         pass
 
     def integrate(self):

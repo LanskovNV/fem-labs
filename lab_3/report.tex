@@ -31,6 +31,7 @@
 \usepackage{color,colortbl}
 
 \usepackage{pdfpages}
+\usepackage{csvsimple}
 
 % \usepackage{verbatim}
 %%%
@@ -51,6 +52,46 @@
 %******************************************************************
 %******************************************************************
 \begin{document}
+
+\begin{titlepage}
+	\center
+		Санкт-Петербургский Политехнический 
+		университет \\ Петра Великого\\
+		Институт прикладной математики и механики
+		\\ \textbf{Высшая школа прикладной математики и вычислительной физики}
+
+	\vfill ~
+	\textbf{
+		\\ \large ЛАБОРАТОРНАЯ РАБОТА
+	}
+	\\ по дисциплине
+	\\ "Метод конечных элементов"
+    \\ \textbf{вариант №3}
+	\vfill ~
+    
+    
+    \begin{flushleft}
+    \underline{Выполнил:}  \hspace{\fill} студент гр.3630102/60101 \textbf{Лансков.Н.В.} \linebreak[2]
+	\underline{Руководитель:} \hspace{\fill} профессор \textbf{Фролов М.Е.} \\ 
+    \end{flushleft}
+    
+
+\vfill
+
+{\large}	Санкт-Петербург
+\\ 2020
+\end{titlepage}
+
+%%%
+% Table of conetnts 
+%%%
+
+\tableofcontents
+\pagebreak
+% \listoffigures
+% \listoftables
+% \newpage
+
 
 \section{Постановка задачи}
 
@@ -122,9 +163,9 @@ $$
 
 \subsection{Зависимость ошибки от числа узлов}
 
-\begin{figure}[H] \label{fig1}
-\centerline{\includegraphics[scale = 0.6]{0.png}}
-\end{figure} 
+\begin{center}
+ \csvautotabular{out.csv}
+\end{center} 
 
 \begin{figure}[H] \label{fig1}
 \centerline{\includegraphics[scale = 0.9]{Figure_3.png}}
@@ -137,29 +178,30 @@ $$
 Запишем функционал ошибок:
 
 \begin{equation}
- J = \int\limits_{\Omega}|u - \sum_{i=1}^N u_i \cdot \phi_i|^2
+ J = \int\limits_{\Omega}|u - \sum_{i=1}^N u_i \phi_i|^2
 \end{equation}
 
-Наше приближённое решение представлено в виде: $u_h = \sum\limits_{i=1}^N u_i \cdot \phi_i$, где $\phi_i$ - базисные функции в узлах сетки, а $N$, соответственно, число узлов.
+Наше приближённое решение представлено в виде: $u_h = \sum\limits_{i=1}^N u_i \phi_i$, где $\phi_i$ - базисные функции в узлах сетки, а $N$, соответственно, число узлов.
 
-Далее составляем матричное уравнение, пользуясь условием минимума функционала:
+Далее составляем матричное уравнение, пользуясь необходимым условием минимума функционала:
 
 \begin{equation}
- \dfrac{\partial J}{\partial u_i} = 0
+ \dfrac{\partial J}{\partial u_i} = 0, \ i = \overline{1, N}
 \end{equation}
 
 Проделав очевидные преобразования над $J$, получаем матричное уравнение относительно $u_i$:
 
 \begin{equation}
- \sum_{j=i}^{N}u_i\int\limits_{\Omega}\phi_i \cdot \phi_j = -\int\limits_{\Omega} u \cdot \phi_i
+ \sum_{j=1}^{N}u_i\int\limits_{\Omega}\phi_i \phi_j = \int\limits_{\Omega} u \phi_i, \
+ i = \overline{1, N}
 \end{equation}
 
 Где базисные функции могут быть вычислены как сумма функций формы на тех конечных элементах, вершиной которых является узел с индексом $i$ в глобальной нумерации узлов:
 
 \begin{equation} \label{eq5}
- \phi_i = \sum_{k = 1}^{M}\phi_i^k
+ \phi_i(x_i, y_i) = \sum_{k = 1}^{M}\phi_i^k(x_i, y_i)
 \end{equation}
-а $\phi_i^k$, в свою очередь, находятся из решения систем вида:
+а $\phi_i^k = a_1x + a_2y + a_3$, в свою очередь, находятся из решения систем вида:
 \begin{equation}
  \begin{cases}
   a_1x_1 + a_2y_1 + a_3 = 1 \\
@@ -169,7 +211,7 @@ $$
 \end{equation}
 для каждого конечного элемента.
 
-В формуле (\ref{eq5}), $M$ - число конечных элементов, в которые входит узел с индексом $i$ в глобальной нумерации, а $\phi_i^k$ - функция формы на $k$-ом элементе - плоскость, проходящая через три точки:
+В формуле (\ref{eq5}), $M$ - число конечных элементов, в которые входит узел с индексом $i$ в глобальной нумерации, а $\phi_i^k$ - функция формы на $k$-ом элементе - плоскость c локальным носителем - $k$-ым конечным элементом, проходящая через вершины конечного элемента:
 \begin{enumerate}
  \item $i: (x_1, y_1, 1)$
  \item $(x_2, y_2, 0)$
