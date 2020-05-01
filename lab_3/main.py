@@ -78,7 +78,7 @@ def test2(n):
 
 
 if __name__ == "__main__":
-    n = 6
+    n = 10
     test(n)
     test2(n)
     # print_errors()

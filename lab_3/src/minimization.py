@@ -47,29 +47,17 @@ class Minimization(BaseFem):
         A = np.zeros((rank, rank))
         R = np.zeros(rank)
 
-        for tr in self.omega.triangles.triangles:
-            trc = self.get_coords_xy(tr)
-            a = area(trc)
-
-            s = []
-            for _ in range(3):
-                s.append(self.get_shape(tr, tr[_]))
-
-            # fill right part
-            R[tr[0]] = self.integrate(tr, lambda x, y: s[0](x, y) * self.function(x, y), a)
-            R[tr[1]] = self.integrate(tr, lambda x, y: s[1](x, y) * self.function(x, y), a)
-            R[tr[2]] = self.integrate(tr, lambda x, y: s[2](x, y) * self.function(x, y), a)
-
-            # fill matrix
-            A[tr[0], tr[0]] += self.integrate(tr, lambda x, y: s[0](x, y) * s[0](x, y), a)
-            A[tr[1], tr[1]] += self.integrate(tr, lambda x, y: s[1](x, y) * s[1](x, y), a)
-            A[tr[2], tr[2]] += self.integrate(tr, lambda x, y: s[2](x, y) * s[2](x, y), a)
-
-            A[tr[0], tr[1]] += self.integrate(tr, lambda x, y: s[0](x, y) * s[1](x, y), a) / 2
-            A[tr[1], tr[0]] += self.integrate(tr, lambda x, y: s[1](x, y) * s[0](x, y), a) / 2
-            A[tr[1], tr[2]] += self.integrate(tr, lambda x, y: s[1](x, y) * s[2](x, y), a) / 2
-            A[tr[2], tr[1]] += self.integrate(tr, lambda x, y: s[2](x, y) * s[1](x, y), a) / 2
-            A[tr[2], tr[0]] += self.integrate(tr, lambda x, y: s[2](x, y) * s[0](x, y), a) / 2
-            A[tr[0], tr[2]] += self.integrate(tr, lambda x, y: s[0](x, y) * s[2](x, y), a) / 2
+        for i in range(rank):
+            elements = self.get_elems(i)
+            for e in elements:
+                si = self.get_shape(e, i)
+                trc = self.get_coords_xy(e)
+                a = area(trc)
+                for ind in e:
+                    sj = self.get_shape(e, ind)
+                    if i == ind:
+                        A[i, ind] += self.integrate(e, lambda x, y: si(x, y) * sj(x, y), a)
+                    else:
+                        A[i, ind] += self.integrate(e, lambda x, y: si(x, y) * sj(x, y), a) / 2
 
         self.node_values = np.linalg.solve(A, R)
