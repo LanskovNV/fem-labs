@@ -18,7 +18,7 @@ fprintf('Норма погрешности в L^2: %d \n', errorFEM(vh, t, p, an
 fprintf('Норма погрешности градиента L^2: %d \n', gradErrorFEM(vh, t, p, @grad));
 
 % draw_analytic(analytic);
-draw_solution(t, p, vh);
+% draw_solution(t, p, vh);
 
 
 % Source functions

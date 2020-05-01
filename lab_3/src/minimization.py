@@ -23,53 +23,53 @@ class Minimization(BaseFem):
         trc[2][0], trc[2][1] = omega.x_coords[tr[2]], omega.y_coords[tr[2]]
         return trc
 
-    def shapes(self, elements_i, i):
-        shapes = []
-        for tr in elements_i:
-            trc = self.get_coords_xy(tr)
-            m = np.column_stack((trc, np.ones(3)))
-            r = np.zeros(3)
+    def get_shape(self, tr, i):
+        trc = self.get_coords_xy(tr)
+        m = np.column_stack((trc, np.ones(3)))
+        r = np.zeros(3)
 
-            for j in range(3):
-                if tr[j] == i:
-                    r[j] = 1
+        for j in range(3):
+            if tr[j] == i:
+                r[j] = 1
 
-            a = np.linalg.solve(m, r)
-            shapes.append(lambda x, y: a[0] * x + a[1] * y + a[2])
-        return shapes
+        a = np.linalg.solve(m, r)
+        return lambda x, y: a[0] * x + a[1] * y + a[2]
 
-    def integrate(self, ei, value):
-        trc = self.get_coords_xy(ei)
-        return area(trc) / 3 * 2 * value
+    def integrate(self, tr, func, s):
+        trc = self.get_coords_xy(tr)
+        f12 = func((trc[0, 0] + trc[1, 0]) / 2, (trc[0, 1] + trc[1, 1]) / 2)
+        f13 = func((trc[0, 0] + trc[2, 0]) / 2, (trc[0, 1] + trc[2, 1]) / 2)
+        f23 = func((trc[1, 0] + trc[2, 0]) / 2, (trc[1, 1] + trc[2, 1]) / 2)
+        return s / 3 * (f12 + f13 + f23)
 
     def set_node_values(self):
         rank = len(self.omega.x_coords)
-        x = self.omega.x_coords
-        y = self.omega.y_coords
         A = np.zeros((rank, rank))
         R = np.zeros(rank)
 
-        for i in range(rank):
-            elements_i = self.get_elems(i)
-            shapes_i = self.shapes(elements_i, i)
+        for tr in self.omega.triangles.triangles:
+            trc = self.get_coords_xy(tr)
+            a = area(trc)
 
-            # right part
-            value = 0
-            for si in shapes_i:
-                value += si(x[i], y[i]) * self.function(x[i], y[i])
-            for ei in elements_i:
-                R[i] += self.integrate(ei, value)
+            s = []
+            for _ in range(3):
+                s.append(self.get_shape(tr, tr[_]))
 
-            # matrix row
-            for j in range(rank):
-                elements_j = self.get_elems(j)
-                shapes_j = self.shapes(elements_j, j)
-                value = 0
-                for si in shapes_i:
-                    for sj in shapes_j:
-                        value += si(x[i], y[i]) * sj(x[i], y[i])
+            # fill right part
+            R[tr[0]] = self.integrate(tr, lambda x, y: s[0](x, y) * self.function(x, y), a)
+            R[tr[1]] = self.integrate(tr, lambda x, y: s[1](x, y) * self.function(x, y), a)
+            R[tr[2]] = self.integrate(tr, lambda x, y: s[2](x, y) * self.function(x, y), a)
 
-                for ei in elements_i:
-                    A[i, j] += self.integrate(ei, value)
+            # fill matrix
+            A[tr[0], tr[0]] += self.integrate(tr, lambda x, y: s[0](x, y) * s[0](x, y), a)
+            A[tr[1], tr[1]] += self.integrate(tr, lambda x, y: s[1](x, y) * s[1](x, y), a)
+            A[tr[2], tr[2]] += self.integrate(tr, lambda x, y: s[2](x, y) * s[2](x, y), a)
+
+            A[tr[0], tr[1]] += self.integrate(tr, lambda x, y: s[0](x, y) * s[1](x, y), a) / 2
+            A[tr[1], tr[0]] += self.integrate(tr, lambda x, y: s[1](x, y) * s[0](x, y), a) / 2
+            A[tr[1], tr[2]] += self.integrate(tr, lambda x, y: s[1](x, y) * s[2](x, y), a) / 2
+            A[tr[2], tr[1]] += self.integrate(tr, lambda x, y: s[2](x, y) * s[1](x, y), a) / 2
+            A[tr[2], tr[0]] += self.integrate(tr, lambda x, y: s[2](x, y) * s[0](x, y), a) / 2
+            A[tr[0], tr[2]] += self.integrate(tr, lambda x, y: s[0](x, y) * s[2](x, y), a) / 2
 
         self.node_values = np.linalg.solve(A, R)

@@ -67,21 +67,20 @@ def draw_errors():
     plt.show()
 
 
-def test():
-    n = 4
+def test(n):
     inter = Minimization(n, shape)
-    print(inter.error(False))
+    print("Minimization error: ", inter.error(False))
 
 
-def test2():
-    n = 4
+def test2(n):
     inter = Interpolation(n, shape)
-    print(inter.error(False))
+    print("Interpolation error: ", inter.error(False))
 
 
 if __name__ == "__main__":
-    test()
-    test2()
+    n = 6
+    test(n)
+    test2(n)
     # print_errors()
     # draw_errors()
 
