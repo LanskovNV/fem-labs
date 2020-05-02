@@ -17,7 +17,7 @@ matplotlib.use('TkAgg')
 
 def print_errors():
     dicts = []
-    for i in range(2, 5):  # 1, 9
+    for i in range(1, 9):  # 1, 9
         print(i)
         inter = Minimization(2**i, shape)  # Interpolation(2**i, shape)
         dicts.append({"n": 2**i,
@@ -37,8 +37,8 @@ def draw_errors():
     err_grad = [Interpolation(i, shape).error(True) for i in n]
 
     f = np.vectorize(log2)
-    def f1(x): return -2*x - 3
-    def f2(x): return - x - 2
+    def f1(x): return -2*x - 2
+    def f2(x): return - x - 1
     f1 = np.vectorize(f1)
     f2 = np.vectorize(f2)
     z = range(1, 9)
@@ -46,10 +46,10 @@ def draw_errors():
     fig, (ax1, ax2) = plt.subplots(1, 2)
     x, y = n, err
     ax1.plot(f(x), f(y), label='func_err')
-    ax1.plot(z, f1(z), 'ro', label='y = -2x - 3')
+    ax1.plot(z, f1(z), 'r--', label='y = -2x - 2')
     x, y = n, err_grad
     ax2.plot(f(x), f(y), label='grad_err')
-    ax2.plot(z, f2(z), 'ro', label='y = -x - 2')
+    ax2.plot(z, f2(z), 'r--', label='y = -x - 1')
 
     ax1.set_title("func_error(num_of_nodes)")
     ax1.set_xlabel("log(nodes)")
@@ -63,8 +63,8 @@ def draw_errors():
     ax2.grid()
     ax2.legend()
 
-    # plt.savefig("pic/Figure_3.png")
-    plt.show()
+    plt.savefig("pic/Figure_3.png")
+    # plt.show()
 
 
 def test(n):
@@ -78,11 +78,11 @@ def test2(n):
 
 
 if __name__ == "__main__":
-    n = 10
-    test(n)
-    test2(n)
+    # n = 10
+    # test(n)
+    # test2(n)
     # print_errors()
-    # draw_errors()
+    draw_errors()
 
 
 
